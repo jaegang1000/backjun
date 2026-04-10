@@ -1,0 +1,31 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+#include<stdlib.h>
+int main(void) {
+	int i, j;
+	int n;
+	int n2;
+	int fn=1;
+	int valid = 0;
+	int count;
+	int temp;
+	scanf("%d", &n);
+	int* nn = (int*)malloc(sizeof(int) * n);
+	for (i = 0; i < n; i++) {
+		scanf("%d", &n2);
+		nn[i] = n2;
+		fn = fn * nn[i];
+	}
+	for (i = 0; i < n-1; i++) {
+		for (j = i + 1; j < n; j++) {
+			if (nn[i] < nn[j]) {
+				temp = nn[j];
+				nn[j] = nn[i];
+				nn[i] = temp;
+			}
+		}
+	}
+	fn = nn[0] * nn[n - 1];
+	printf("%d", fn);
+	return 0;
+}
