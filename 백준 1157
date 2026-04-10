@@ -1,0 +1,45 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+#include<stdlib.h>
+int main() {
+	int count = 0;
+	char* n = (char*)malloc(sizeof(char) * count);
+	int i, j, k;
+	int max=0, maxcount=0;
+	while (true) {
+		scanf("%c", &n);
+		count++;
+		if (n[count] == '\n'|| n[count]== ' ') {
+			break;
+		}
+	}
+	int* counta = (int*)malloc(sizeof(int) * count);
+	for (i = 0; i < sizeof(n); i++) {
+		counta[i] = 0;
+		for (j = 0; j < sizeof(n); j++) {
+			if (n[i] == n[j]) {
+				counta[i]++;
+			}
+		}
+	}
+	for (i = 0; i < sizeof(counta); i++) {
+		if (max < counta[i]) {
+			max = counta[i];
+		}
+	}
+	for (i = 0; i < sizeof(n); i++) {
+		if (max == counta[i]) {
+			maxcount++;
+		}
+	}
+	if (maxcount >= 2) {
+		printf("?");
+	}
+	if (maxcount == 1) {
+		i = 0;
+		while (max > counta[i]) {
+			i++;
+		}
+		printf("%d", n[i]);
+	}
+}
