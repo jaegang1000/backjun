@@ -1,0 +1,205 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+#include<stdlib.h>
+int main() {
+	int n1, n2;
+	int i, j, k, l, m;
+	int k2, kind, l2;
+	scanf("%d", &n1);
+	int* inc = (int*)malloc(sizeof(int) * n1);
+	int* inp = (int*)malloc(sizeof(int) * n1);
+	int* inpc = (int*)malloc(sizeof(int) * n1);
+	int temp;
+	bool same = true;
+	
+	//오름차순 아닌 수(instance)
+	int naccending = 0;
+
+	//오름차순 아닌 배열
+	int naca[2];
+	naca[0] = 0;
+
+	//brickpoint 수
+	int bri = 0;
+
+	//breakponit 수
+	int breakpoint = 0;
+
+	//score 계산 시 회전 여러번 하니까 최적의 score 산출 전에 회전 전의 ori 개수.
+	//최적 score 구간 회전 후 pori-- 수행
+	int pori = 0;
+
+	//orient pair 수
+	int ori = 0;
+	
+	//ori 인덱스 범위 저장
+	int** orin = (int**)malloc(sizeof(int*) * pori);
+
+	//op reverse 수행 후 남은 op 수 비교
+	int* orinp = (int*)malloc(sizeof(int) * ori);
+
+	//huddle 개수
+	int huddle = 0;
+
+	//huddle 길이
+	int* huddleln = (int*)malloc(sizeof(int) * huddle);
+	
+	//breakpint. huddle 인덱스
+	int* brcorin = (int*)malloc(sizeof(int) * huddle);
+	int** huddleind = (int**)malloc(sizeof(int*) * huddle);
+
+	//회전 수행 후와 회전 수행 전의 breakpoint 수 차이
+	int* score = (int*)malloc(sizeof(int) * pori);
+
+	//최적의 score 구할 때 index 최소
+	int min = n1;
+
+	//reverse 횟수
+	int count = 0;
+
+	//양수 음수 개수
+	int pos = 0, neg = 0;
+
+	for (i = 0; i < n1; i++) {
+		inc[i] = i + 1;
+	}
+	for (i = 0; i < n1; i++) {
+		scanf("%d", &n2);
+		inp[i] = n2;
+	}
+	for (i = 0; i < n1 - 1; i++) {
+		for (j = i + 1; j < n1; j++) {
+			if (inp[i] + inp[j] == 1 || inp[i] + inp[j] == -1) {
+				pori++;
+				ori++;
+			}
+		}
+	}
+	for (i = 0; i < n1 - 1; i++) {
+		if (inp[i] + 1 != inp[i + 1]) {
+			naccending++;
+		}
+	}
+	for (i = 0; i < n1; i++) {
+		if (inc[i] > 0) {
+			pos++;
+		} 
+		if (inc[i] < 0) {
+			neg++;
+		}
+	}
+	//최적의 score 산출 직후 op 또는 처음 score 산출하기 전 op 개수>0
+	//1칸 옆의 수가 1만큼 차이 나는게 없을 때
+	//음수 양수 개수
+	while (pori > 0 || naccending > 0 || pos == 0 || neg > 0 || ori > 0 || ori > 0) {
+		naccending = 0;
+		pos = 0;
+		neg = 0;
+		ori = 0;
+		//case1
+		while (true) {
+			pori = 0;
+			for (i = 0; i < pori; i++) {
+				orin[i] = (int*)malloc(sizeof(int) * 2);
+			}
+			for (i = 0; i < n1 - 1; i++) {
+				for (j = i + 1; j < n1; j++) {
+					if (inp[i] + inp[j] == 1 || inp[i] + inp[j] == -1) {
+						ori++;
+						pori++;
+						orin[pori - 1][0] = i;
+						orin[pori - 1][1] = j;
+					}
+				}
+			}
+			while (true) {
+				ori = 0;
+				for (i = 0; i < pori; i++) {
+					for (j = 0; j < n1 - 1; j++) {
+						for (k2 = j + 1; k2 < n1; k2++) {
+							if (inp[j] + inp[k2] == 1 || inp[j] + inp[k2] == -1) {
+								ori++;
+							}
+						}
+					}
+				}
+			}
+			
+			for (i = 0; i < pori; i++) {
+				for (j = orin[i][0]; j <= orin[i][1]; j++) {
+					temp = inp[j];
+					inp[j] = -inp[orin[i][1] - j + orin[i][0]];
+					inp[orin[i][1] - j + orin[i][0]] = -temp;
+				}
+			}
+			for (i = 0; i < pori; i++) {
+				for (j = 0; j < n1 - 1; j++) {
+					for (k = j + 1; k < n1; k++) {
+						if (inp[j] + 1 != inp[j + 1]) {
+							naca[0]++;
+						}
+					}
+					for (k2 = 0; k2 < pori; k2++) {
+						if ((orin[k2][1] - orin[k2][0]) <= min) {
+							min = orin[k2][1] - orin[k2][0];
+							score[k2] = min;
+							kind = k2;
+						}
+					}
+				}
+			}
+			for (i = orin[kind][0]; i < orin[kind][1]; i++) {
+				temp = inp[i];
+				inp[i] = -inp[orin[kind][1] - i + orin[kind][0] - 1];
+				inp[orin[kind][1] - i + orin[kind][0] - 1] = -temp;
+			}
+			if (pori == 0) {
+				break;
+			}
+		}
+		//case2. positive permutation
+		if (neg == 0) {
+			for (i = 2; i < n1; i++) { //허들 길이 범위-1
+				for (j = 0; j < n1 - i; j++) { //허들의 길이에 따른 허들 시작 가능 위치
+					for (k = 0; k <= j; k++) { //0부터 허들 시작 가능 위치까지의 인자
+						int minh = n1;
+						for (l = k; l < k + i + 1; l++) { //허들 시작점부터 허들 길이만큼의 범위
+							if (inp[l] <= minh) {
+								minh = inp[l];
+							}
+						}
+						//huddle instant length
+						int huddleiln = 0;
+						for (l2 = 0; l2 < i + 1; j++) {
+							for (m = 0; m < i + 1; m++) {
+								if (min + m == inp[l2]) {
+									huddleiln++;
+								}
+							}
+						}
+						if (huddleiln == i + 1) {
+							huddle++;
+						}
+						huddleind[huddle][0] = i;
+						huddleind[huddle][1] = i + huddleiln - 1;
+						huddleiln = 0;
+					}
+				}
+			}
+		}
+		for (i = 0; i < n1 - 1; i++) {
+			if (inp[i] + 1 != inp[i + 1]) {
+				naccending++;
+			}
+		}
+		for (i = 0; i < n1; i++) {
+			if (inc[i] > 0) {
+				pos++;
+			}
+			if (inc[i] < 0) {
+				neg++;
+			}
+		}
+
+	}
+}
