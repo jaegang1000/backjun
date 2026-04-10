@@ -1,0 +1,31 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<iostream>
+#include<vector>
+using namespace std;
+int count = 0;
+int sum = 0;
+vector<int>a;
+int N, S;
+void repeat(int index, int sum) {
+	if (sum + a[index] == S) {
+		::count++;
+	}
+	if (index == N - 1) {
+		return;
+	}
+	if (index < N - 1) {
+		repeat(index + 1, sum);
+		repeat(index + 1, sum + a[index]);
+	}
+}
+int main() {
+	int i, j, k;
+	int n;
+	cin >> N >> S;
+	for (i = 0; i < N; i++) {
+		cin >> n;
+		a.push_back(n);
+	}
+	repeat(0, 0);
+	cout << ::count << endl;
+}
