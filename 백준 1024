@@ -1,0 +1,53 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+#include<stdlib.h>
+int main() {
+	int n, l, i, j, k;
+	scanf("%d %d", &n, &l);
+	if (n / l - l / 2 - 1 >= 0) {
+		k = n / l - l / 2 - 1;
+	}
+	else {
+		k = 0;
+	}
+	
+	int sum;
+	while (1) {
+		sum = 0;
+		if (sum < n) {
+			sum = 0;
+			while (sum<n) {
+				sum = l * (k + k + l - 1) / 2;
+				if (sum < n) {
+					k++;
+				}
+				if (sum == n) {
+					break;
+				}
+			}
+		}
+		if (sum == n) {
+			break;
+		}
+		if (sum > n) {
+			l++;
+			if (n / l - l / 2 - 1 >= 0) {
+				k = n / l - l / 2 - 1;
+			}
+			else {
+				k = 0;
+			}
+		}
+		if (l > 100) {
+			break;
+		}
+	}
+	if (l > 100) {
+		printf("-1");
+	}
+	else {
+		for (i = 0; i < l; i++) {
+			printf("%d ", k + i);
+		}
+	}
+}
