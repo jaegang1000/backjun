@@ -1,0 +1,63 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+#include<stdlib.h>
+int main(void) {
+	int i, j, k,l;
+	int row, coloumn;
+	char** board;
+	char input;
+	int countb;
+	int countw;
+	int minb, minw,min;
+	scanf("%d %d", &row, &coloumn);
+	board = (char**)malloc(sizeof(char*) * row);
+	minb = row * coloumn;
+	minw = row * coloumn;
+	for (i = 0; i < row; i++) {
+		board[i] = (char*)malloc(sizeof(char) * coloumn);
+	}
+	for (i = 0; i < row; i++) {
+		for (j = 0; j < coloumn; j++) {
+			scanf(" %c", &input);
+			board[i][j] = input;
+		}
+	}
+	for (i = 0; i < row - 7; i++) {
+		for (j = 0; j < coloumn - 7; j++) {
+			countb = 0;
+			countw = 0;
+			for (k = i; k < i + 8; k++) {
+				for (l = j; l < j + 8; l++) {
+					if ((k + l) % 2 == 0 && board[k][l] != 'B') {
+						countb++;
+					}
+					if ((k + l) % 2 == 1 && board[k][l] != 'W') {
+						countb++;
+					}
+					if ((k + l) % 2 == 0 && board[k][l] != 'W') {
+						countw++;
+					}
+					if ((k + l) % 2 == 1 && board[k][l] != 'B') {
+						countw++;
+					}
+				}
+			}
+			if (countb < minb) {
+				minb = countb;
+				
+			}
+			if (countw < minw) {
+				minw = countw;
+				
+			}
+			
+			if (minb < minw) {
+				min = minb;	
+			}
+			else {
+				min = minw;
+			}
+		}
+	}
+	printf("%d", min);
+}
